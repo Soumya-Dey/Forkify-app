@@ -14,6 +14,7 @@ const elementsStrings = {
     loader: 'loader'
 };
 
+// function to show loading animation
 export const renderLoader = parentDiv => {
     const loaderHtml = `
         <div class=${elementsStrings.loader}>
@@ -26,6 +27,7 @@ export const renderLoader = parentDiv => {
     parentDiv.insertAdjacentHTML('afterbegin', loaderHtml);
 };
 
+// function to hide loading animation
 export const removeLoader = () => {
     const loader = document.querySelector(`.${elementsStrings.loader}`);
 

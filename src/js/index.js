@@ -1,6 +1,7 @@
 // Api used --> https://forkify-api.herokuapp.com/
 
 import Search from './models/Search';
+import Recipe from './models/Recipe';
 import { elements, renderLoader, removeLoader } from './views/base';
 import * as searchView from './views/searchView';
 
@@ -12,6 +13,11 @@ import * as searchView from './views/searchView';
  */
 const state = {};
 
+/**
+ * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ * SEARCH CONTROLLER
+ * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ */
 const controlSeach = async () => {
     // get query text from view
     const query = searchView.getInput();
@@ -24,13 +30,18 @@ const controlSeach = async () => {
         searchView.clearResults();
         renderLoader(elements.searchRes);
 
-        // Search for recipes
-        await state.search.getResults();
+        try {
+            // Search for recipes
+            await state.search.getResults();
 
-        // Render the search results in ui
-        removeLoader();
-        searchView.clearInput();
-        searchView.renderRecipes(state.search.recipes);
+            // Render the search results in ui
+            removeLoader();
+            searchView.clearInput();
+            searchView.renderRecipes(state.search.recipes);
+        } catch (error) {
+            alert('Something wrong with search...try again !');
+            removeLoader();
+        }
     }
 };
 
@@ -48,4 +59,39 @@ elements.searchResPages.addEventListener('click', e => {
         searchView.clearResults();
         searchView.renderRecipes(state.search.recipes, gotoPage);
     }
+});
+
+/**
+ * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ * RECIPE CONTROLLER
+ * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ */
+const controlRecipe = async () => {
+    // get the recipe id from url
+    const id = window.location.hash.replace('#', '');
+
+    if (id) {
+        // save as new Recipe object to the state
+        state.recipe = new Recipe(id);
+
+        // Prepare the ui for showing the recipe
+
+        try {
+            // get the recipe and calculate time, servings
+            await state.recipe.getRecipe();
+            state.recipe.calcTime();
+            state.recipe.calcServings();
+
+            // Render the recipe  in ui
+            console.log(state.recipe);
+        } catch (error) {
+            alert('Error processing recipe...try again !');
+        }
+    }
+};
+
+// function to be called when the hash value in url changes and
+// when the page loads with a hash value in the url
+['hashchange', 'load'].forEach(event => {
+    window.addEventListener(event, controlRecipe);
 });
