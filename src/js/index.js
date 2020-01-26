@@ -39,6 +39,7 @@ const controlSeach = async () => {
             searchView.clearInput();
             searchView.renderRecipes(state.search.recipes);
         } catch (error) {
+            console.log(error);
             alert('Something wrong with search...try again !');
             removeLoader();
         }
@@ -77,14 +78,16 @@ const controlRecipe = async () => {
         // Prepare the ui for showing the recipe
 
         try {
-            // get the recipe and calculate time, servings
+            // get the recipe, format ingredients and calculate time, servings
             await state.recipe.getRecipe();
+            state.recipe.formatIngredients();
             state.recipe.calcTime();
             state.recipe.calcServings();
 
             // Render the recipe  in ui
             console.log(state.recipe);
         } catch (error) {
+            console.log(error);
             alert('Error processing recipe...try again !');
         }
     }
