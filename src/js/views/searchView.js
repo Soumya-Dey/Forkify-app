@@ -16,6 +16,14 @@ export const clearResults = () => {
     elements.searchResPages.innerHTML = '';
 }
 
+export const highlightSelected = id => {
+    document.querySelectorAll('.results__link').forEach(eachLink => {
+        eachLink.classList.remove('results__link--active');
+    });
+
+    document.querySelector(`a[href="#${id}"]`).classList.add('results__link--active');
+};
+
 // for rendering the whole recipe list 10 per page by default
 export const renderRecipes = (recipes, page = 1, resPerPage = 10) => {
     // rendering the actual results

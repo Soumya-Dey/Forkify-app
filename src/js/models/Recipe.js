@@ -24,7 +24,7 @@ export default class Recipe {
 
     calcTime() {
         // Assuming that we need 15 min for each 3 ingredients
-        this.time = (Math.ceil(this.ingredients.length / 3)) * 15;
+        this.time = (Math.ceil(this.ingredients.length / 3)) * 10;
     }
 
     calcServings() {
