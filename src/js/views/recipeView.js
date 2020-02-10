@@ -31,12 +31,12 @@ export const renderRecipe = recipe => {
                     <span class="recipe__info-text"> servings</span>
 
                     <div class="recipe__info-buttons">
-                        <button class="btn-tiny">
+                        <button class="btn-tiny btn-decrease">
                             <svg>
                                 <use href="img/icons.svg#icon-circle-with-minus"></use>
                             </svg>
                         </button>
-                        <button class="btn-tiny">
+                        <button class="btn-tiny btn-increase">
                             <svg>
                                 <use href="img/icons.svg#icon-circle-with-plus"></use>
                             </svg>
@@ -83,6 +83,16 @@ export const renderRecipe = recipe => {
     elements.recipe.insertAdjacentHTML('afterbegin', recipeInfoMarkup);
 };
 
+export const updateServingsIngredient = recipe => {
+    // update servings
+    document.querySelector('.recipe__info-data--people').textContent = recipe.servings;
+
+    // update ingredient counts
+    document.querySelectorAll('.recipe__count').forEach((curr, index) => {
+        curr.textContent = formatCountFraction(recipe.ingredients[index].count);
+    });
+};
+
 // utility function for creating markup for each ingredient list item
 const generateIngredientMarkup = ingredient => {
     return `
@@ -106,10 +116,13 @@ const formatCountFraction = count => {
             newCount = parseFloat(count.toFixed(1)); // 1.3333333 -> 1.3
             const [intPart, decPart] = newCount.toString().split('.').map(el => parseInt(el)); // 3.5 -> ['3', '5'] -> [3, 5] -> 3
 
+            // for 0.5, 0.3, 0.7 etc
             if (intPart === 0) {
                 const fraction = new Fraction(newCount); // Library used -> https://github.com/ekg/fraction.js/
                 return `${fraction.numerator}/${fraction.denominator}`;
-            } else {
+            }
+            // for 1.2, 2.5 etc
+            else {
                 const fraction = new Fraction(newCount - intPart);
                 return `${intPart} ${fraction.numerator}/${fraction.denominator}`;
             }
