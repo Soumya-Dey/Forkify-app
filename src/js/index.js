@@ -6,6 +6,7 @@ import List from './models/List';
 import { elements, renderLoader, removeLoader } from './views/base';
 import * as searchView from './views/searchView';
 import * as recipeView from './views/recipeView';
+import * as listView from './views/listView';
 
 /**Global app state
  * > Search object
@@ -14,6 +15,7 @@ import * as recipeView from './views/recipeView';
  * > Linked recipes
  */
 const state = {};
+window.s = state;
 
 /**
  * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -125,7 +127,39 @@ elements.recipe.addEventListener('click', e => {
             // update the ui
             recipeView.updateServingsIngredient(state.recipe);
         }
+    } else if (e.target.matches('.recipe__btn-add, .recipe__btn-add *')) {
+        controlShoppingList();
     }
 });
 
-window.l = new List();
+/**
+ * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ * SHOPPING LIST CONTROLLER
+ * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ */
+const controlShoppingList = () => {
+    // create a empty shopping list if not already created
+    if (!state.shoppingList) state.shoppingList = new List();
+
+    // add all the ingredients to the shopping list and render the shopping list to ui
+    state.recipe.ingredients.forEach(currIng => {
+        listView.renderListItem(state.shoppingList.addItem(currIng.count, currIng.unit, currIng.ingredient));
+    });
+};
+
+elements.shopping.addEventListener('click', e => {
+    // get the id the corresponding item
+    const itemId = e.target.closest('.shopping__item').dataset.itemid; // element closest to the target that has the class of 'shopping__item'
+
+    if(e.target.matches('.shopping__delete, .shopping__delete *')){
+        // delete the item from the shopping list data structure
+        state.shoppingList.deleteItem(itemId);
+
+        // remove the item from ui
+        listView.deleteListItem(itemId);
+    } else if(e.target.matches('.shopping__count-value')){
+        // update the count value in the shopping list
+        const val = parseFloat(e.target.value);
+        if(val > e.target.step) state.shoppingList.updateCount(itemId, val);
+    }
+});

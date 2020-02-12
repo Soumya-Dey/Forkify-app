@@ -602,7 +602,7 @@ body {
 
 .shopping__list {
   list-style: none;
-  max-height: 77rem;
+  max-height: 97rem;
   overflow: scroll;
 }
 
