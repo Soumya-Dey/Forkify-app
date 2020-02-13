@@ -14,10 +14,12 @@ import * as likesView from './views/likesView';
  * > Search object
  * > Current recipe object
  * > Shopping list
- * > Linked recipes
+ * > Liked recipes
  */
 const state = {};
-window.s = state;
+
+
+
 
 /**
  * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -67,6 +69,9 @@ elements.searchResPages.addEventListener('click', e => {
         searchView.renderRecipes(state.search.recipes, gotoPage);
     }
 });
+
+
+
 
 /**
  * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -138,6 +143,9 @@ elements.recipe.addEventListener('click', e => {
     }
 });
 
+
+
+
 /**
  * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
  * SHOPPING LIST CONTROLLER
@@ -170,12 +178,14 @@ elements.shopping.addEventListener('click', e => {
     }
 });
 
+
+
+
 /**
  * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
  * LIKES CONTROLLER
  * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
  */
-state.likes = new Likes() // testing
 const controlLikesList = () => {
     // create a empty likes list if not already created
     if (!state.likes) state.likes = new Likes();
@@ -205,3 +215,17 @@ const controlLikesList = () => {
     }
     likesView.toggleLikesMenu(state.likes.getLikesSize());
 }
+
+window.addEventListener('load', () => {
+    state.likes = new Likes();
+
+    // resote the likes data from localStorae
+    state.likes.restoreData();
+
+    likesView.toggleLikesMenu(state.likes.getLikesSize());
+
+    // render the existing likes
+    state.likes.likes.forEach(like => {
+        likesView.renderLike(like);
+    });
+});

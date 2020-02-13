@@ -114,7 +114,7 @@ const formatCountFraction = count => {
         let newCount;
         if (count.toString().includes('.')) {
             newCount = parseFloat(count.toFixed(1)); // 1.3333333 -> 1.3
-            const [intPart, decPart] = newCount.toString().split('.').map(el => parseInt(el)); // 3.5 -> ['3', '5'] -> [3, 5] -> 3
+            const [intPart, decPart] = newCount.toString().split('.').map(el => parseInt(el)); // 3.5 -> ['3', '5'] -> [3, 5]
 
             // for 0.5, 0.3, 0.7 etc
             if (intPart === 0) {
