@@ -21,7 +21,7 @@ export const highlightSelected = id => {
         eachLink.classList.remove('results__link--active');
     });
 
-    document.querySelector(`a[href="#${id}"]`).classList.add('results__link--active');
+    document.querySelector(`.results__link[href="#${id}"]`).classList.add('results__link--active');
 };
 
 // for rendering the whole recipe list 10 per page by default
@@ -36,6 +36,23 @@ export const renderRecipes = (recipes, page = 1, resPerPage = 10) => {
 
     // rendering the pagination buttons
     renderButtons(page, recipes.length, resPerPage);
+};
+
+// function to show long title in one line
+export const reduceRecipeTitle = (title, limit = 18) => {
+    const reducedTitle = [];
+
+    if (title.length > limit) {
+        title.split(' ').reduce((count, current) => {
+            if (count + current.length <= limit) reducedTitle.push(current);
+
+            return count + current.length;
+        }, 0 /* this is the initial value of count*/);
+
+        return reducedTitle.join(' ') + "...";
+    }
+
+    return title;
 };
 
 // utility function to render pagination buttons
@@ -91,21 +108,4 @@ const renderRecipe = recipe => {
     `;
 
     elements.searchResList.insertAdjacentHTML('beforeend', recipeMarkup);
-};
-
-// utility function to show long title in one line
-const reduceRecipeTitle = (title, limit = 18) => {
-    const reducedTitle = [];
-
-    if (title.length > limit) {
-        title.split(' ').reduce((count, current) => {
-            if (count + current.length <= limit) reducedTitle.push(current);
-
-            return count + current.length;
-        }, 0 /* this is the initial value of count*/);
-
-        return reducedTitle.join(' ') + "...";
-    }
-
-    return title;
 };

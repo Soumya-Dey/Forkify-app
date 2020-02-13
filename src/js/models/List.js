@@ -8,7 +8,7 @@ export default class List {
     addItem(count, unit, ingredient) {
         const item = {
             id: uniqid(),
-            count,
+            count, // means count: count;
             unit,
             ingredient
         };

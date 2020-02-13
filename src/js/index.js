@@ -3,10 +3,12 @@
 import Search from './models/Search';
 import Recipe from './models/Recipe';
 import List from './models/List';
+import Likes from './models/Likes';
 import { elements, renderLoader, removeLoader } from './views/base';
 import * as searchView from './views/searchView';
 import * as recipeView from './views/recipeView';
 import * as listView from './views/listView';
+import * as likesView from './views/likesView';
 
 /**Global app state
  * > Search object
@@ -95,7 +97,7 @@ const controlRecipe = async () => {
 
             // Render the recipe  in ui
             removeLoader();
-            recipeView.renderRecipe(state.recipe);
+            recipeView.renderRecipe(state.recipe, state.likes.isLiked(id));
         } catch (error) {
             console.log(error);
             alert('Error processing recipe...try again !');
@@ -128,7 +130,11 @@ elements.recipe.addEventListener('click', e => {
             recipeView.updateServingsIngredient(state.recipe);
         }
     } else if (e.target.matches('.recipe__btn-add, .recipe__btn-add *')) {
+        // add items to the shopping list
         controlShoppingList();
+    } else if (e.target.matches('.recipe__love, .recipe__love *')) {
+        // add recipies to the likes list
+        controlLikesList();
     }
 });
 
@@ -151,15 +157,51 @@ elements.shopping.addEventListener('click', e => {
     // get the id the corresponding item
     const itemId = e.target.closest('.shopping__item').dataset.itemid; // element closest to the target that has the class of 'shopping__item'
 
-    if(e.target.matches('.shopping__delete, .shopping__delete *')){
+    if (e.target.matches('.shopping__delete, .shopping__delete *')) {
         // delete the item from the shopping list data structure
         state.shoppingList.deleteItem(itemId);
 
         // remove the item from ui
         listView.deleteListItem(itemId);
-    } else if(e.target.matches('.shopping__count-value')){
+    } else if (e.target.matches('.shopping__count-value')) {
         // update the count value in the shopping list
         const val = parseFloat(e.target.value);
-        if(val > e.target.step) state.shoppingList.updateCount(itemId, val);
+        if (val > e.target.step) state.shoppingList.updateCount(itemId, val);
     }
 });
+
+/**
+ * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ * LIKES CONTROLLER
+ * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ */
+state.likes = new Likes() // testing
+const controlLikesList = () => {
+    // create a empty likes list if not already created
+    if (!state.likes) state.likes = new Likes();
+
+    const currId = state.recipe.id;
+
+    // add the recipe to the likes list if not liked already,
+    // or remove it from the likes list if already liked
+    if (!state.likes.isLiked(currId)) {
+        // add the recipe to the likes list data structure
+        const newLike = state.likes.addLike(currId, state.recipe.title, state.recipe.author, state.recipe.image);
+
+        // toggle the likes button
+        likesView.toggleLikeBtn(state.likes.isLiked(currId));
+
+        // add the recipe to the likes list in ui
+        likesView.renderLike(newLike);
+    } else {
+        // remove the recipe from the likes list data structure
+        state.likes.deleteLike(currId);
+
+        // toggle the likes button
+        likesView.toggleLikeBtn(state.likes.isLiked(currId));
+
+        // remove the recipe from the likes list in ui
+        likesView.removeLike(currId);
+    }
+    likesView.toggleLikesMenu(state.likes.getLikesSize());
+}
