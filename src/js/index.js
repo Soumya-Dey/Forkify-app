@@ -135,8 +135,17 @@ elements.recipe.addEventListener('click', e => {
             recipeView.updateServingsIngredient(state.recipe);
         }
     } else if (e.target.matches('.recipe__btn-add, .recipe__btn-add *')) {
+
         // add items to the shopping list
         controlShoppingList();
+
+        // add transform transition to the heading
+        elements.listHeading.classList.add('heading_transform');
+        elements.shoppingHead.classList.add('heading_container');
+
+        // add delete all button, remove first if already exists 
+        listView.removeDeleteAllBtn();
+        listView.renderDeleteAllBtn();
     } else if (e.target.matches('.recipe__love, .recipe__love *')) {
         // add recipies to the likes list
         controlLikesList();
@@ -177,6 +186,18 @@ elements.shopping.addEventListener('click', e => {
         if (val > e.target.step) state.shoppingList.updateCount(itemId, val);
     }
 });
+
+elements.shoppingHead.addEventListener('click', e => {
+    if(e.target.matches('.shopping__delete-all, .shopping__delete-all *')){
+        if(state.shoppingList){
+            // delete all items from the shopping list data structure
+            state.shoppingList.deleteAll();
+
+            // remove all shopping list items from ui
+            listView.deleteAllItems();
+        }
+    }
+})
 
 
 

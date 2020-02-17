@@ -21,5 +21,26 @@ export const renderListItem = item => {
 
 export const deleteListItem = id => {
     const itemToDelete = document.querySelector(`[data-itemid="${id}"]`);
-    if(itemToDelete) itemToDelete.parentElement.removeChild(itemToDelete);
+    if (itemToDelete) itemToDelete.parentElement.removeChild(itemToDelete);
 };
+
+export const deleteAllItems = () => {
+    elements.shopping.innerHTML = '';
+}
+
+export const renderDeleteAllBtn = () => {
+    const deleteAllBtnMarkup = `
+        <button class="shopping__delete-all btn-tiny">
+            <svg>
+                <use href="img/icons.svg#icon-circle-with-cross"></use>
+            </svg>
+        </button>
+        `;
+
+    elements.shoppingHead.insertAdjacentHTML('beforeend', deleteAllBtnMarkup);
+}
+
+export const removeDeleteAllBtn = () => {
+    const dltAlBtn = elements.deleteAllBtn;
+    dltAlBtn.parentElement.removeChild(dltAlBtn);
+}

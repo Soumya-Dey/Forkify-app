@@ -28,6 +28,10 @@ export default class List {
         this.items.splice(index, 1);
     }
 
+    deleteAll(){
+        this.items = [];
+    }
+
     updateCount(id, newCount) {
         // returns the element itself where the function returns true
         this.items.find(curr => {

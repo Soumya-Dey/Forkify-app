@@ -604,6 +604,7 @@ body {
   list-style: none;
   max-height: 97rem;
   overflow: scroll;
+  position: relative;
 }
 
 .shopping__item {
@@ -666,4 +667,33 @@ body {
 .shopping__item:hover .shopping__delete {
   opacity: 1;
   visibility: visible;
+}
+
+.list_container{
+  display: flex;
+  justify-content: center;
+}
+
+.list_heading{
+  transform: translateX(1.2rem);
+  transition: all .5s;
+}
+
+.heading_container:hover .shopping__delete-all{
+  visibility: visible;
+  opacity: 1;
+}
+
+.list_container:hover .heading_transform{
+  transform: translateX(0);
+}
+
+.shopping__delete-all{
+  background-image: linear-gradient(to right, transparent 0%, #fff 40%, #fff 100%);
+  transition: all .5s;
+  align-self: flex-start;
+  margin-top: 0.48rem;
+  visibility: hidden;
+  opacity: 0;
+  transform: translateX(1.5rem);
 }
